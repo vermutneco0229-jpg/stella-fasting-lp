@@ -114,6 +114,15 @@ section{position:relative;padding:64px 0 72px;}
 .voice-body{font-size:13.5px;}
 .voice-video-wrap{text-align:center;}
 .voice-video-label{font-size:12.5px;color:var(--ink-light);margin-bottom:14px;}
+.voice-video{position:relative;max-width:280px;margin:0 auto;aspect-ratio:9/16;border-radius:14px;overflow:hidden;background:#1d241b;box-shadow:0 10px 26px rgba(51,73,45,.22);}
+.voice-video video{width:100%;height:100%;object-fit:cover;display:block;}
+.voice-video-play{position:absolute;inset:0;width:100%;height:100%;border:0;background:linear-gradient(180deg,rgba(29,36,27,0) 40%,rgba(29,36,27,.45) 100%);cursor:pointer;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;color:#fff;padding:0;font-family:inherit;}
+.voice-video-play .pico{width:66px;height:66px;border-radius:50%;background:rgba(255,255,255,.94);display:flex;align-items:center;justify-content:center;box-shadow:0 6px 18px rgba(0,0,0,.28);transition:transform .2s;}
+.voice-video-play:active .pico{transform:scale(.94);}
+.voice-video-play .pico svg{width:26px;height:26px;margin-left:4px;fill:var(--green-deep);}
+.voice-video-play .ptxt{font-size:12px;letter-spacing:.08em;font-weight:500;text-shadow:0 1px 4px rgba(0,0,0,.55);}
+.voice-video.is-playing .voice-video-play{display:none;}
+.voice-video-note{font-size:11px;color:var(--ink-light);margin-top:12px;line-height:1.7;}
 .voice-disclaimer{text-align:center;font-size:11px;color:var(--ink-light);margin-top:26px;}
 
 /* ===== flow steps ===== */
@@ -392,10 +401,16 @@ footer .copy{font-size:10.5px;opacity:.6;letter-spacing:.05em;}
     </div>
     <div class="voice-video-wrap">
       <p class="voice-video-label">▼ 受講者インタビュー動画</p>
-      <div class="ph ph-video">
-        <span class="ph-ico">🎬</span>
-        <span class="ph-txt">インタビュー動画<br>（縦型スマホ動画）<br>※使用可否 要確認</span>
+      <div class="voice-video">
+        <video playsinline preload="none" poster="img/interview-poster.jpg">
+          <source src="video/interview.mp4" type="video/mp4">
+        </video>
+        <button type="button" class="voice-video-play" aria-label="受講者インタビュー動画を再生する">
+          <span class="pico"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg></span>
+          <span class="ptxt">タップして再生（5分11秒）</span>
+        </button>
       </div>
+      <p class="voice-video-note">※音声が流れます。字幕付きなので、音を出せない場所でもご覧いただけます。</p>
     </div>
     <p class="voice-disclaimer">※個人の感想です。効果には個人差があります。</p>
   </div>
@@ -775,6 +790,12 @@ footer .copy{font-size:10.5px;opacity:.6;letter-spacing:.05em;}
 <script>
 const io=new IntersectionObserver(es=>{es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('is-in');io.unobserve(e.target);}})},{threshold:.08});
 document.querySelectorAll('.fade').forEach(el=>io.observe(el));
+document.querySelectorAll('.voice-video').forEach(w=>{
+  const v=w.querySelector('video'),b=w.querySelector('.voice-video-play');
+  b.addEventListener('click',()=>{v.setAttribute('controls','');w.classList.add('is-playing');v.play();});
+  v.addEventListener('play',()=>w.classList.add('is-playing'));
+  v.addEventListener('ended',()=>w.classList.remove('is-playing'));
+});
 </script>
 </body>
 </html>
